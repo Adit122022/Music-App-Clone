@@ -39,8 +39,8 @@ async function main() {
   const audio = new Audio(`/songs/${songs[0]}`);
   audio.play();
 });
-  audio.play().catch(err => {
-    console.log("Autoplay blocked, wait for user interaction.");
+  audio.play().catch((err)=> {
+    console.log("Autoplay blocked, wait for user interaction.",err);
   });
 
   audio.addEventListener("loadeddata", () => {
@@ -48,4 +48,8 @@ async function main() {
   });
 }
 
-main();
+window.onload =()=>{
+  main();
+}
+
+
