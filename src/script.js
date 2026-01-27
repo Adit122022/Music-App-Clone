@@ -16,39 +16,40 @@ async function getSongs() {
   return songs;
 }
 async function main() {
-  // Get the list of all the songs
   let songs = await getSongs();
   console.log(songs);
 
-  let songUL = document
-    .querySelector(".songlist")
-    .getElementsByTagName("ul")[0];
+  let songUL = document.querySelector(".songlist ul");
 
   for (const song of songs) {
-    songUL.innerHTML =
-      songUL.innerHTML +
-      `
-     <li class="hover  text-grey transiton">
-                        
-     <img class="invert hover-invert" src="/assets/music.svg" alt="home">
-                <div class="info">
-                    <Div>${song
-                      .replaceAll("%20", " ")
-                      .replaceAll(".mp3", "!")}</Div>
-                  </div>
-                     <!-- play button -->
-                <div class="play  flex justify-center items-center">
-                    <i class="ri-play-large-fill"></i>
-                </div>    </li>`;
+    songUL.innerHTML += `
+      <li class="hover text-grey transition">
+        <img class="invert hover-invert" src="/assets/music.svg" alt="home">
+        <div class="info">
+          <div>${decodeURIComponent(song).replace(".mp3", "")}</div>
+        </div>
+        <div id="playBtn" class="play flex justify-center items-center">
+          <i class="ri-play-large-fill"></i>
+        </div>
+      </li>`;
   }
-  // Play the first song
-  var audio = new Audio(songs[0]);
+
+  // Play first song (will only work if browser allows autoplay)
+  document.querySelector("#playBtn").addEventListener("click", () => {
+  const audio = new Audio(`/songs/${songs[0]}`);
   audio.play();
+});
+  audio.play().catch((err)=> {
+    console.log("Autoplay blocked, wait for user interaction.",err);
+  });
 
   audio.addEventListener("loadeddata", () => {
-    let duration = audio.duration;
-    // The duration variable now holds the duration (in seconsds) of the aduio clip
-    // console.log(audio.duration,audio.currentSrc ,audio.current);
+    console.log("Duration:", audio.duration);
   });
 }
-main();
+
+window.onload =()=>{
+  main();
+}
+
+
